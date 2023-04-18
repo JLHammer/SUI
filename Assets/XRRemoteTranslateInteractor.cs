@@ -14,6 +14,7 @@ public class XRRemoteTranslateInteractor : XRBaseControllerInteractor
     [SerializeField] private GameObject spawnedProxy;
     //[SerializeField] private Vector3 ProxyPosition;
     [SerializeField] private IXRHoverInteractable currentSelection;
+    public GameObject RightHandController;
     public float Speed = 4f;
 
     private void Update()
@@ -25,6 +26,7 @@ public class XRRemoteTranslateInteractor : XRBaseControllerInteractor
                 //currentSelection.transform.gameObject;
                 DespawnProxy();
                 currentSelection = null;
+                RightHandController.GetComponent<XRRemoteRotateInteractor>().currentSelection = null;
             }
             return;
         }
@@ -99,6 +101,8 @@ public class XRRemoteTranslateInteractor : XRBaseControllerInteractor
         if (currentSelection == null)
         {
             interactable = correctHit;
+            RightHandController.GetComponent<XRRemoteRotateInteractor>().currentSelection = currentSelection;
+            RightHandController.GetComponent<XRRemoteRotateInteractor>().rotationStorage.transform.rotation = currentSelection.transform.rotation;
         }
         //interactable = correctHit;
         return true;

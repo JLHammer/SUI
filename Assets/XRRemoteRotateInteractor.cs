@@ -11,32 +11,57 @@ public class XRRemoteRotateInteractor : XRBaseControllerInteractor
     [SerializeField] private GameObject ProxyPrefab;
     [SerializeField] private Transform controllerTransform;
     private GameObject spawnedProxy;
-    private IXRHoverInteractable currentSelection;
+    public IXRHoverInteractable currentSelection;
+    public Quaternion rotationDifference;
+    public GameObject rotationStorage;
+    //public GameObject CurrentlySelectedObject;
+
+    private void Start()
+    {
+        rotationStorage = new GameObject("Rotation Storage");
+    }
 
     private void Update()
     {
+        if (IsGripping())
+        {
+            if (spawnedProxy == null)
+            {
+                SpawnProxy();
+            }
+            SetCurrentRotation();
+            currentSelection.transform.rotation = rotationDifference;
+            //currentSelection.transform.rotation = rotationStorage.transform.rotation * controllerTransform.rotation;
+        }
         if (!IsGripping())
         {
-            if (currentSelection != null)
-            {
-                //currentSelection.transform.gameObject;
-                DespawnProxy();
-                currentSelection = null;
-            }
-            return;
+            DespawnProxy();
+            rotationStorage.transform.rotation = currentSelection.transform.rotation;
         }
-        if (FindInteractable(ref currentSelection) && currentSelection != null)
-        {
-            //currentSelection.transform.gameObject;
-            SetCurrentRotation();
-            SpawnProxy();
-        }
+
+        //if (!IsGripping())
+        //{
+        //    if (currentSelection != null)
+        //    {
+        //        //currentSelection.transform.gameObject;
+        //        DespawnProxy();
+        //        currentSelection = null;
+        //    }
+        //    return;
+        //}
+        //if (FindInteractable(ref currentSelection) && currentSelection != null)
+        //{
+        //    //currentSelection.transform.gameObject;
+        //    SetCurrentRotation();
+        //    SpawnProxy();
+        //}
         //spawnedProxy.transform.position = controllerTransform.position;
     }
 
     private void SetCurrentRotation()
     {
-        //var difference = Quaternion.Inverse(spawnedProxy.transform.rotation) * controllerTransform.rotation;
+        rotationDifference = Quaternion.Inverse(spawnedProxy.transform.rotation) * controllerTransform.rotation * rotationStorage.transform.rotation;
+        //rotationDifference = 
     }
 
     public override void ProcessInteractor(XRInteractionUpdateOrder.UpdatePhase updatePhase)
@@ -88,7 +113,8 @@ public class XRRemoteRotateInteractor : XRBaseControllerInteractor
     private void SpawnProxy()
     {
         spawnedProxy = Instantiate(ProxyPrefab);
-        //spawnedProxy.transform.position = controllerTransform.position;
+        spawnedProxy.transform.position = controllerTransform.position;
+        spawnedProxy.transform.rotation = controllerTransform.rotation;
     }
     
     private void DespawnProxy()
