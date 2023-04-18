@@ -9,19 +9,9 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class XRRemoteRotateInteractor : XRBaseControllerInteractor
 {
     [SerializeField] private GameObject ProxyPrefab;
+    [SerializeField] private Transform controllerTransform;
     private GameObject spawnedProxy;
     private IXRHoverInteractable currentSelection;
-    [SerializeField] private Transform controllerTransform;
-    
-    private void DespawnProxy()
-    {
-        if (spawnedProxy != null)
-        {
-            Destroy(spawnedProxy);
-            spawnedProxy = null;
-        }
-
-    }
 
     private void Update()
     {
@@ -41,6 +31,7 @@ public class XRRemoteRotateInteractor : XRBaseControllerInteractor
             SetCurrentRotation();
             SpawnProxy();
         }
+        spawnedProxy.transform.position = controllerTransform.position;
     }
 
     private void SetCurrentRotation()
@@ -57,9 +48,7 @@ public class XRRemoteRotateInteractor : XRBaseControllerInteractor
     {
 
     }
-
     
-
     private bool IsGripping()
     {
         var ctrl = xrController as ActionBasedController;
@@ -99,5 +88,15 @@ public class XRRemoteRotateInteractor : XRBaseControllerInteractor
     private void SpawnProxy()
     {
         spawnedProxy = Instantiate(ProxyPrefab);
+    }
+    
+    private void DespawnProxy()
+    {
+        if (spawnedProxy != null)
+        {
+            Destroy(spawnedProxy);
+            spawnedProxy = null;
+        }
+
     }
 }
