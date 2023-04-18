@@ -11,8 +11,10 @@ public class XRRemoteTranslateInteractor : XRBaseControllerInteractor
 {
     [SerializeField] private GameObject ProxyPrefab;
     [SerializeField] private Transform controllerTransform;
-    private GameObject spawnedProxy;
-    private IXRHoverInteractable currentSelection;
+    [SerializeField] private GameObject spawnedProxy;
+    //[SerializeField] private Vector3 ProxyPosition;
+    [SerializeField] private IXRHoverInteractable currentSelection;
+    public float Speed = 4f;
 
     private void Update()
     {
@@ -29,10 +31,22 @@ public class XRRemoteTranslateInteractor : XRBaseControllerInteractor
         if (FindInteractable(ref currentSelection) && currentSelection != null)
         {
             //currentSelection.transform.gameObject;
-            SetCurrentRotation();
-            SpawnProxy();
+            if (spawnedProxy == null)
+            {
+                SetCurrentRotation();
+                SpawnProxy();
+            }
+            //SetCurrentRotation();
+            //SpawnProxy();
         }
-        spawnedProxy.transform.position = controllerTransform.position;
+        //spawnedProxy.transform.position = controllerTransform.position;
+        if (currentSelection != null)
+        {
+            if (Vector3.Distance(spawnedProxy.transform.position, controllerTransform.position) > 0.1f)
+            {
+                currentSelection.transform.position -= (spawnedProxy.transform.position - controllerTransform.position) * Time.deltaTime * Speed;
+            }
+        }
     }
 
     private void SetCurrentRotation()
@@ -82,13 +96,19 @@ public class XRRemoteTranslateInteractor : XRBaseControllerInteractor
         {
             return false;
         }
-        interactable = correctHit;
+        if (currentSelection == null)
+        {
+            interactable = correctHit;
+        }
+        //interactable = correctHit;
         return true;
     }
 
     private void SpawnProxy()
     {
         spawnedProxy = Instantiate(ProxyPrefab);
+        spawnedProxy.transform.position = controllerTransform.position;
+        
     }
     
     private void DespawnProxy()

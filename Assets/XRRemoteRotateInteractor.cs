@@ -31,7 +31,7 @@ public class XRRemoteRotateInteractor : XRBaseControllerInteractor
             SetCurrentRotation();
             SpawnProxy();
         }
-        spawnedProxy.transform.position = controllerTransform.position;
+        //spawnedProxy.transform.position = controllerTransform.position;
     }
 
     private void SetCurrentRotation()
@@ -88,6 +88,7 @@ public class XRRemoteRotateInteractor : XRBaseControllerInteractor
     private void SpawnProxy()
     {
         spawnedProxy = Instantiate(ProxyPrefab);
+        //spawnedProxy.transform.position = controllerTransform.position;
     }
     
     private void DespawnProxy()
