@@ -24,6 +24,7 @@ public class XRRemoteTranslateInteractor : XRBaseControllerInteractor
     //[SerializeField] private Vector3 ProxyPosition;
     [SerializeField] private IXRHoverInteractable currentSelection;
     private IXRHoverInteractable currentHoverTarget;
+    public GameObject RightHandController;
     public float Speed = 4f;
 
     private void Update()
@@ -38,6 +39,7 @@ public class XRRemoteTranslateInteractor : XRBaseControllerInteractor
                 //currentSelection.transform.gameObject;
                 DespawnProxy();
                 currentSelection = null;
+                RightHandController.GetComponent<XRRemoteRotateInteractor>().currentSelection = null;
             }
             return;
         }
@@ -145,6 +147,8 @@ public class XRRemoteTranslateInteractor : XRBaseControllerInteractor
         {
             audioSource.PlayOneShot(OnSelectEnteredClip);
             interactable = correctHit;
+            RightHandController.GetComponent<XRRemoteRotateInteractor>().currentSelection = interactable;
+
         }
         //interactable = correctHit;
         return true;
