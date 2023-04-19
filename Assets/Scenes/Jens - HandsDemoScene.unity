@@ -14324,6 +14324,7 @@ MonoBehaviour:
     type: 3}
   controllerTransform: {fileID: 969414679909369453}
   spawnedProxy: {fileID: 0}
+  RightHandController: {fileID: 636167512}
   Speed: 4
 --- !u!1 &1074997377
 GameObject:
