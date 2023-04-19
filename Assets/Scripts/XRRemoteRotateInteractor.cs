@@ -24,7 +24,7 @@ public class XRRemoteRotateInteractor : XRBaseControllerInteractor
 
     private void Update()
     {
-        if (IsGripping())
+        if (IsGripping() && currentSelection != null)
         {
             if (spawnedProxy == null)
             {
